@@ -1,9 +1,16 @@
 
-# stackedBarPlot
+# easy-stacked-bar
 
 A simple package for generating D3 horizontal stacked barplots
 
 ![Alt text](img/image.png)
+
+## Installation
+
+Install the latest release from npm
+
+`npm install easy-stacked-bar`
+
 
 ## Quick Start
 
