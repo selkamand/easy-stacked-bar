@@ -1,6 +1,5 @@
 import * as d3 from "d3";
-
-// Example Data Input
+import { computeAxisTextAndTickBuffer } from "./utilsD3.js";
 
 /**
  * A function to create a stacked horizontal bar chart.
@@ -45,15 +44,26 @@ import * as d3 from "d3";
  */
 export const stackedBarHorizontal = () => {
   //! Properties
+  //? Read/Write
   let data;
   let yScale = null;
   let hideAxisX = false;
   let hideAxisY = false;
   let yTickSize = 0;
+  let yTickSizeOuter = 0;
+  let yTickPadding = 0;
   let ypadding = 0.2;
   let positionTopLeft = [50, 50]; //Top left position (based on top left of y Axis line)
   let positionBottomRight = [800, 700]; //bottom right position (based on bottom right of x axis line)
   let pixelGapBetweenStacks = 2;
+  let colorScale = null;
+  let xScale = null;
+  let fontSizeX = 12;
+  let fontSizeY = 12;
+
+  //? Read Only (computed only once my() is called)
+  let yAxisTextAndTickBuffer = 0; // How many pixels does the y axis text + tickmarks take up?
+  let xAxisTextAndTickBuffer = 0; // How many pixels does the x axis text + tickmarks take up?
 
   const my = (selection) => {
     //! Figure Out Categories
@@ -71,32 +81,31 @@ export const stackedBarHorizontal = () => {
     const xRange = [positionTopLeft[0], positionBottomRight[0]];
 
     //! Create Scales
-    const xScale = d3.scaleLinear().domain([0, maxTotal]).range(xRange);
+    //? User can supply their own scales, but if not, we have some sensible ones by default
 
-    const colorScale = d3
-      .scaleOrdinal()
-      .domain(subCategoryNames)
-      .range([
-        "#66c2a5",
-        "#fc8d62",
-        "#8da0cb",
-        "#e78ac3",
-        "#a6d854",
-        "#ffd92f",
-        "#e5c494",
-        "#b3b3b3",
-      ]);
+    if (xScale === null) {
+      xScale = d3.scaleLinear().domain([0, maxTotal]).range(xRange);
+    }
+
+    if (colorScale === null) {
+      colorScale = d3
+        .scaleOrdinal()
+        .domain(subCategoryNames)
+        .range([
+          "#66c2a5",
+          "#fc8d62",
+          "#8da0cb",
+          "#e78ac3",
+          "#a6d854",
+          "#ffd92f",
+          "#e5c494",
+          "#b3b3b3",
+        ]);
+    }
 
     //? Allow user to supply a pre-computed yScale. If none supplied create one
-    let yScaleComputed;
     if (yScale === null) {
-      yScaleComputed = d3
-        .scaleBand()
-        .domain(yDomain)
-        .range(yRange)
-        .padding(ypadding);
-    } else {
-      yScaleComputed = yScale;
+      yScale = d3.scaleBand().domain(yDomain).range(yRange).padding(ypadding);
     }
 
     //! Create Stack
@@ -117,8 +126,8 @@ export const stackedBarHorizontal = () => {
           xPixels: xScale(dInner[0]),
           widthPixels:
             xScale(dInner[1]) - xScale(dInner[0]) - pixelGapBetweenStacks,
-          yPixels: yScaleComputed(dInner.data[categoryName]),
-          heightPixels: yScaleComputed.bandwidth(),
+          yPixels: yScale(dInner.data[categoryName]),
+          heightPixels: yScale.bandwidth(),
           tooltip: categoryName + "<br>" + "width: " + (dInner[1] - dInner[0]),
           subCategory: d.key,
           color: colorScale(d.key),
@@ -152,13 +161,16 @@ export const stackedBarHorizontal = () => {
       .attr("fill", (d) => d.color)
       .attr("stroke-width", 0);
 
-    //! Rendering Axes
+    //! Create Axes
     const yAxis = d3
-      .axisLeft(yScaleComputed)
-      .tickSizeOuter(0)
-      .tickSize(yTickSize);
+      .axisLeft(yScale)
+      .tickSize(yTickSize)
+      .tickSizeOuter(yTickSizeOuter)
+      .tickPadding(yTickPadding);
+
     const xAxis = d3.axisBottom(xScale);
 
+    //! Render Axes
     if (!hideAxisY) {
       chartGroup
         .selectAll(".y-axis")
@@ -178,6 +190,18 @@ export const stackedBarHorizontal = () => {
         .attr("transform", `translate(0, ${positionBottomRight[1]})`)
         .call(xAxis);
     }
+
+    //! Enforce Axis Label Fontsize
+    chartGroup
+      .selectAll(".y-axis>.tick>text")
+      .style("font-size", fontSizeY + "px");
+    chartGroup
+      .selectAll(".x-axis>.tick>text")
+      .style("font-size", fontSizeX + "px");
+
+    // These aren't used yet
+    yAxisTextAndTickBuffer = computeAxisTextAndTickBuffer(yAxis, fontSizeY);
+    xAxisTextAndTickBuffer = computeAxisTextAndTickBuffer(xAxis, fontSizeX);
 
     return chartGroup;
   };
@@ -216,6 +240,14 @@ export const stackedBarHorizontal = () => {
     return my;
   };
 
+  my.colorScale = function (_) {
+    return arguments.length ? ((colorScale = _), my) : colorScale;
+  };
+
+  my.xScale = function (_) {
+    return arguments.length ? ((xScale = _), my) : xScale;
+  };
+
   my.hideAxisX = function () {
     hideAxisX = true;
     return my;
@@ -239,6 +271,35 @@ export const stackedBarHorizontal = () => {
   my.yTickSize = function (_) {
     return arguments.length ? ((yTickSize = _), my) : yTickSize;
   };
+
+  my.yTickSizeOuter = function (_) {
+    return arguments.length ? ((yTickSizeOuter = _), my) : yTickSizeOuter;
+  };
+
+  my.yTickPadding = function (_) {
+    return arguments.length ? ((yTickPadding = _), my) : yTickPadding;
+  };
+
+  my.fontSizeX = function (_) {
+    return arguments.length ? ((fontSizeX = _), my) : fontSizeX;
+  };
+
+  my.fontSizeY = function (_) {
+    return arguments.length ? ((fontSizeY = _), my) : fontSizeY;
+  };
+
+  my.yAxisTextAndTickBuffer = function () {
+    return yAxisTextAndTickBuffer;
+  };
+
+  my.xAxisTextAndTickBuffer = function () {
+    return xAxisTextAndTickBuffer;
+  };
+
+  my.property = function () {
+    return property;
+  };
+
   //return function for method chaining
   return my;
 };
