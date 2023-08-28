@@ -26,6 +26,7 @@ import { computeAxisTextAndTickBuffer } from "./utilsD3.js";
  * @property {function} mouseOverFunction - Sets the function to execute on mouseover event.
  * @property {function} mouseMoveFunction - Sets the function to execute on mousemove event.
  * @property {function} mouseLeaveFunction - Sets the function to execute on mouseleave event.
+ * @property {function} rectSecondaryClass - Sets secondary classes for rectangles that make up the stacked bars. E.g. set to 'chart1-rects' to add a secondary class that can be useful for making your hover-effects chart-specific.
  * @returns {function} The main function for creating the chart.
  *
  * @example
@@ -70,14 +71,19 @@ export const stackedBarHorizontal = () => {
   let fontSizeY = 12;
   let cornerRadius = 2;
 
+  // Functions Fired on Events
   let mouseOverFunction = null;
   let mouseMoveFunction = null;
   let mouseLeaveFunction = null;
+
+  // Optional Additional Class
+  let rectSecondaryClass = "";
 
   //? Read Only (computed only once my() is called)
   let yAxisTextAndTickBuffer = 0; // How many pixels does the y axis text + tickmarks take up? Not used yet
   let xAxisTextAndTickBuffer = 0; // How many pixels does the x axis text + tickmarks take up? Not used yet
 
+  //! Actual Rendering Function
   const my = (selection) => {
     //! Figure Out Categories
     const categoryName = Object.keys(data[0])[0]; // Assume first column values should represent y axis bandscale values
@@ -163,6 +169,7 @@ export const stackedBarHorizontal = () => {
       .attr("class", "stacked-bar");
 
     //! Render Stacked Bars
+    //rectClass
     chartGroup
       .selectAll(".stacked-bar-rect-group")
       .data([0])
@@ -171,7 +178,7 @@ export const stackedBarHorizontal = () => {
       .selectAll(".stacked-rect")
       .data(marks)
       .join("rect")
-      .attr("class", "stacked-rect")
+      .attr("class", `stacked-rect ${rectSecondaryClass}`)
       .attr("fill", "grey")
       .attr("stroke", "black")
       .attr("x", (d) => d.xPixels)
@@ -343,6 +350,12 @@ export const stackedBarHorizontal = () => {
     return arguments.length
       ? ((mouseLeaveFunction = _), my)
       : mouseLeaveFunction;
+  };
+
+  my.rectSecondaryClass = function (_) {
+    return arguments.length
+      ? ((rectSecondaryClass = _), my)
+      : rectSecondaryClass;
   };
 
   //return function for method chaining

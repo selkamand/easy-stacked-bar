@@ -162,3 +162,6 @@ The `stackedBarHorizontal` function is used to create a stacked horizontal bar c
 
 - `mouseLeaveFunction(callback: function)`
   - Sets the function to execute on mouseleave event.
+
+- `rectSecondaryClass(secondaryClass: string)`
+  - Sets a secondary class of the rect svg elements composing the stacked bar chart
