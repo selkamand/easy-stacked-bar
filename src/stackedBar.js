@@ -4,7 +4,7 @@ import { computeAxisTextAndTickBuffer } from "./utilsD3.js";
 /**
  * A function to create a stacked horizontal bar chart.
  *
- * See example for typical data input format (array of objects). Assumes first property in each object represent the Y axis categories.
+ * See example for typical data input format (array of objects). Assumes the first property in each object represents the Y axis categories.
  * All other properties should describe counts of each subcategory.
  *
  * @typedef {Object} StackedBarHorizontal
@@ -18,6 +18,14 @@ import { computeAxisTextAndTickBuffer } from "./utilsD3.js";
  * @property {function} hideAxisY - Hides the y-axis of the chart.
  * @property {function} showAxisY - Shows the y-axis of the chart.
  * @property {function} yTickSize - Sets the tick size for the y-axis.
+ * @property {function} yTickSizeOuter - Sets the outer tick size for the y-axis.
+ * @property {function} yTickPadding - Sets the tick padding for the y-axis.
+ * @property {function} fontSizeX - Sets the font size for the x-axis labels.
+ * @property {function} fontSizeY - Sets the font size for the y-axis labels.
+ * @property {function} cornerRadius - Sets the corner radius for the stacked bars.
+ * @property {function} mouseOverFunction - Sets the function to execute on mouseover event.
+ * @property {function} mouseMoveFunction - Sets the function to execute on mousemove event.
+ * @property {function} mouseLeaveFunction - Sets the function to execute on mouseleave event.
  * @returns {function} The main function for creating the chart.
  *
  * @example
@@ -60,10 +68,15 @@ export const stackedBarHorizontal = () => {
   let xScale = null;
   let fontSizeX = 12;
   let fontSizeY = 12;
+  let cornerRadius = 2;
+
+  let mouseOverFunction = null;
+  let mouseMoveFunction = null;
+  let mouseLeaveFunction = null;
 
   //? Read Only (computed only once my() is called)
-  let yAxisTextAndTickBuffer = 0; // How many pixels does the y axis text + tickmarks take up?
-  let xAxisTextAndTickBuffer = 0; // How many pixels does the x axis text + tickmarks take up?
+  let yAxisTextAndTickBuffer = 0; // How many pixels does the y axis text + tickmarks take up? Not used yet
+  let xAxisTextAndTickBuffer = 0; // How many pixels does the x axis text + tickmarks take up? Not used yet
 
   const my = (selection) => {
     //! Figure Out Categories
@@ -118,6 +131,7 @@ export const stackedBarHorizontal = () => {
     //! Create Marks Array
     const marks = [];
     stackedSeries.map((d) => {
+      console.log(d);
       d.map((dInner) =>
         marks.push({
           x: dInner[0],
@@ -128,7 +142,13 @@ export const stackedBarHorizontal = () => {
             xScale(dInner[1]) - xScale(dInner[0]) - pixelGapBetweenStacks,
           yPixels: yScale(dInner.data[categoryName]),
           heightPixels: yScale.bandwidth(),
-          tooltip: categoryName + "<br>" + "width: " + (dInner[1] - dInner[0]),
+          tooltip:
+            dInner.data[categoryName] +
+            " > " +
+            d.key +
+            "<br>" +
+            "Count: " +
+            (dInner[1] - dInner[0]),
           subCategory: d.key,
           color: colorScale(d.key),
         })
@@ -159,7 +179,11 @@ export const stackedBarHorizontal = () => {
       .attr("width", (d) => d.widthPixels)
       .attr("height", (d) => d.heightPixels)
       .attr("fill", (d) => d.color)
-      .attr("stroke-width", 0);
+      .attr("stroke-width", 0)
+      .attr("rx", cornerRadius)
+      .on("mouseover", mouseOverFunction)
+      .on("mousemove", mouseMoveFunction)
+      .on("mouseleave", mouseLeaveFunction);
 
     //! Create Axes
     const yAxis = d3
@@ -233,6 +257,7 @@ export const stackedBarHorizontal = () => {
       : positionBottomRight;
   };
 
+  // Scales
   my.yScale = function (_) {
     if (!arguments.length) return yScale;
     yScale = _;
@@ -248,6 +273,7 @@ export const stackedBarHorizontal = () => {
     return arguments.length ? ((xScale = _), my) : xScale;
   };
 
+  // Axes
   my.hideAxisX = function () {
     hideAxisX = true;
     return my;
@@ -268,6 +294,7 @@ export const stackedBarHorizontal = () => {
     return my;
   };
 
+  // Ticks
   my.yTickSize = function (_) {
     return arguments.length ? ((yTickSize = _), my) : yTickSize;
   };
@@ -280,6 +307,7 @@ export const stackedBarHorizontal = () => {
     return arguments.length ? ((yTickPadding = _), my) : yTickPadding;
   };
 
+  // Fonts
   my.fontSizeX = function (_) {
     return arguments.length ? ((fontSizeX = _), my) : fontSizeX;
   };
@@ -288,6 +316,7 @@ export const stackedBarHorizontal = () => {
     return arguments.length ? ((fontSizeY = _), my) : fontSizeY;
   };
 
+  // Buffers (read only)
   my.yAxisTextAndTickBuffer = function () {
     return yAxisTextAndTickBuffer;
   };
@@ -296,8 +325,24 @@ export const stackedBarHorizontal = () => {
     return xAxisTextAndTickBuffer;
   };
 
-  my.property = function () {
-    return property;
+  // Rect paramaters
+  my.cornerRadius = function (_) {
+    return arguments.length ? ((cornerRadius = _), my) : cornerRadius;
+  };
+
+  // Event Functions
+  my.mouseOverFunction = function (_) {
+    return arguments.length ? ((mouseOverFunction = _), my) : mouseOverFunction;
+  };
+
+  my.mouseMoveFunction = function (_) {
+    return arguments.length ? ((mouseMoveFunction = _), my) : mouseMoveFunction;
+  };
+
+  my.mouseLeaveFunction = function (_) {
+    return arguments.length
+      ? ((mouseLeaveFunction = _), my)
+      : mouseLeaveFunction;
   };
 
   //return function for method chaining

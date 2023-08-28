@@ -94,3 +94,62 @@ const longData = [
  //   {"gene": "TP53",  "missense": 2, "nonsense": 1 }
  // ]
 ```
+
+
+## Key Methods of `stackedBarHorizontal`
+
+The `stackedBarHorizontal` function is used to create a stacked horizontal bar chart. It allows you to customize various aspects of the chart's appearance and behavior.
+
+- `data(data: Array<Object>): StackedBarHorizontal`
+  - Sets the data for the chart. Expects an array of objects where each object represents a data point with categories and subcategories.
+
+- `pixelGapBetweenStacks(pixelGap: number): StackedBarHorizontal`
+  - Sets the gap between stacked bars in pixels.
+
+- `positionTopLeft(position: [number, number]): StackedBarHorizontal`
+  - Sets the top left position of the chart relative to the top of the y-axis line.
+
+- `positionBottomRight(position: [number, number]): StackedBarHorizontal`
+  - Sets the bottom right position of the chart relative to the right of the x-axis line.
+
+- `yScale(scale: d3.scaleBand): StackedBarHorizontal`
+  - Sets a pre-computed yScale for the chart. Allows you to provide a custom y-axis scale.
+
+- `hideAxisX(): StackedBarHorizontal`
+  - Hides the x-axis of the chart.
+
+- `showAxisX(): StackedBarHorizontal`
+  - Shows the x-axis of the chart.
+
+- `hideAxisY(): StackedBarHorizontal`
+  - Hides the y-axis of the chart.
+
+- `showAxisY(): StackedBarHorizontal`
+  - Shows the y-axis of the chart.
+
+- `yTickSize(tickSize: number): StackedBarHorizontal`
+  - Sets the tick size for the y-axis.
+
+- `yTickSizeOuter(tickSizeOuter: number): StackedBarHorizontal`
+  - Sets the outer tick size for the y-axis.
+
+- `yTickPadding(tickPadding: number): StackedBarHorizontal`
+  - Sets the tick padding for the y-axis.
+
+- `fontSizeX(fontSize: number): StackedBarHorizontal`
+  - Sets the font size for the x-axis labels.
+
+- `fontSizeY(fontSize: number): StackedBarHorizontal`
+  - Sets the font size for the y-axis labels.
+
+- `cornerRadius(radius: number): StackedBarHorizontal`
+  - Sets the corner radius for the stacked bars.
+
+- `mouseOverFunction(callback: function): StackedBarHorizontal`
+  - Sets the function to execute on mouseover event.
+
+- `mouseMoveFunction(callback: function): StackedBarHorizontal`
+  - Sets the function to execute on mousemove event.
+
+- `mouseLeaveFunction(callback: function): StackedBarHorizontal`
+  - Sets the function to execute on mouseleave event.
