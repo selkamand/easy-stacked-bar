@@ -1,9 +1,16 @@
 
-# easy-stacked-bar
+# easy-stacked-bar <!-- omit from toc -->
 
 A simple package for generating D3 horizontal stacked barplots
 
 ![Alt text](img/image.png)
+
+## Table of Contents <!-- omit from toc -->
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Counting Long Data](#counting-long-data)
+- [Key Methods](#key-methods)
+  - [`stackedBarHorizontal`](#stackedbarhorizontal)
 
 ## Installation
 
@@ -96,7 +103,9 @@ const longData = [
 ```
 
 
-## Key Methods of `stackedBarHorizontal`
+## Key Methods 
+
+### `stackedBarHorizontal`
 
 The `stackedBarHorizontal` function is used to create a stacked horizontal bar chart. It allows you to customize various aspects of the chart's appearance and behavior.
 
