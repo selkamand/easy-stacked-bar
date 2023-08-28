@@ -100,56 +100,56 @@ const longData = [
 
 The `stackedBarHorizontal` function is used to create a stacked horizontal bar chart. It allows you to customize various aspects of the chart's appearance and behavior.
 
-- `data(data: Array<Object>): StackedBarHorizontal`
+- `data(data: Array<Object>)`
   - Sets the data for the chart. Expects an array of objects where each object represents a data point with categories and subcategories.
 
-- `pixelGapBetweenStacks(pixelGap: number): StackedBarHorizontal`
+- `pixelGapBetweenStacks(pixelGap: number)`
   - Sets the gap between stacked bars in pixels.
 
-- `positionTopLeft(position: [number, number]): StackedBarHorizontal`
+- `positionTopLeft(position: [number, number])`
   - Sets the top left position of the chart relative to the top of the y-axis line.
 
-- `positionBottomRight(position: [number, number]): StackedBarHorizontal`
+- `positionBottomRight(position: [number, number])`
   - Sets the bottom right position of the chart relative to the right of the x-axis line.
 
-- `yScale(scale: d3.scaleBand): StackedBarHorizontal`
+- `yScale(scale: d3.scaleBand)`
   - Sets a pre-computed yScale for the chart. Allows you to provide a custom y-axis scale.
 
-- `hideAxisX(): StackedBarHorizontal`
+- `hideAxisX()`
   - Hides the x-axis of the chart.
 
-- `showAxisX(): StackedBarHorizontal`
+- `showAxisX()`
   - Shows the x-axis of the chart.
 
-- `hideAxisY(): StackedBarHorizontal`
+- `hideAxisY()`
   - Hides the y-axis of the chart.
 
-- `showAxisY(): StackedBarHorizontal`
+- `showAxisY()`
   - Shows the y-axis of the chart.
 
-- `yTickSize(tickSize: number): StackedBarHorizontal`
+- `yTickSize(tickSize: number)`
   - Sets the tick size for the y-axis.
 
-- `yTickSizeOuter(tickSizeOuter: number): StackedBarHorizontal`
+- `yTickSizeOuter(tickSizeOuter: number)`
   - Sets the outer tick size for the y-axis.
 
-- `yTickPadding(tickPadding: number): StackedBarHorizontal`
+- `yTickPadding(tickPadding: number)`
   - Sets the tick padding for the y-axis.
 
-- `fontSizeX(fontSize: number): StackedBarHorizontal`
+- `fontSizeX(fontSize: number)`
   - Sets the font size for the x-axis labels.
 
-- `fontSizeY(fontSize: number): StackedBarHorizontal`
+- `fontSizeY(fontSize: number)`
   - Sets the font size for the y-axis labels.
 
-- `cornerRadius(radius: number): StackedBarHorizontal`
+- `cornerRadius(radius: number)`
   - Sets the corner radius for the stacked bars.
 
-- `mouseOverFunction(callback: function): StackedBarHorizontal`
+- `mouseOverFunction(callback: function)`
   - Sets the function to execute on mouseover event.
 
-- `mouseMoveFunction(callback: function): StackedBarHorizontal`
+- `mouseMoveFunction(callback: function)`
   - Sets the function to execute on mousemove event.
 
-- `mouseLeaveFunction(callback: function): StackedBarHorizontal`
+- `mouseLeaveFunction(callback: function)`
   - Sets the function to execute on mouseleave event.
