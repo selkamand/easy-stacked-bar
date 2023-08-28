@@ -1,6 +1,6 @@
 {
   "name": "easy-stacked-bar",
-  "version": "0.0.3",
+  "version": "0.0.2",
   "description": "A simple package for generating D3 horizontal stacked barplots",
   "main": "./src/index.js",
   "scripts": {
